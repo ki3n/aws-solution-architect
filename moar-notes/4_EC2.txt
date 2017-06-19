@@ -1,0 +1,763 @@
+EC2
+Elastic Compute Cloud
+Amazon EC2 is a web service that provides resizable compute capacity in the cloud.
+It reduces the time required to obtain and boot new server instances to minutes, allowing you to quickly scale capacity, both up and down, as your computing requirements change
+It is simply VMs in the cloud.
+
+EC2 Options
+1.) On Demand
+Allows you to pay a fixed rate by the hour with no commitments
+2.) Reserved
+Provide you with capacity reservation and offer a significant discount on the hourly charge for an instance. 1 Year or 3 Year Terms.
+3.) Spot
+Enable you to bid whatever price you want for instance capacity, providing for even greater saving if you application has flexible start and finish times.
+4.) Dedicated Hosts
+Physical EC2 server dedicated for your use. Dedicated Hosts can help you reduce costs by allowing you to use your existing server-bound software license.
+
+On Demand
+1.) Users that want the low cost and flexibility of Amazon EC2 without any up-front payments or long-term commitments
+2.) Applications with short term, spiky or unpredictable workloads that cannot be interrupted.
+3.) Applications being developed or tested on Amazon EC2 for first time.
+
+Reserved
+1.) Applications with steady state or predictable usage
+2.) Applications that require reserved capacity.
+3.) Users able to make upfront payments to reduce their total computing cost even further discounts.
+
+Spot
+1.) Applications that have flexible start and end times.
+2.) Applications that are only feasible at very low compute prices.
+3.) Users with urgent computing needs for large amounts of additional capacity.
+Exam Tip
+If you terminate the instance, you pay for the hour.
+If AWS terminates the spot instance, you get the hour it was terminated in for free.
+If the Spot instance is terminated by Amazon EC2 you will not be charged for a partial hour of usage. However if you terminate the instance yourself, you will be charged for any hour in which the instance ran.
+
+Dedicated Hosts
+1.) Useful for regulatory requirements that may not support multi-tenant virtualization.
+2.) Great for licensing which does not support multi-tenancy or cloud deployments.
+3.) Can be purchased On-Demand (hourly)
+4.) Can be purchased as a Reservation for up to 70% off the On-Demand price.
+
+EBS
+Disks that you attach to your VMs
+Amazon EBS allows you to create storage volumes and attach them to Amazon EC2 instances. Once attached you can create a file system on top of these volumes, run a database, or use them in any other way you would use a block device. Amazon EBS volumes are placed in a specific Availability Zone, where they are automatically replicated to protect you from the failure of a single component.
+
+EBS Volumes Types
+1.) General Purpose SSD (GP2)
+General purpose balance both price and performance
+Ratio of 3 IOPS per GB with up to 10,000 IOPS and the ability to burst up to 3000 IOPS for extended periods of time for volumes under 1Gib
+2.) Provisioned IOPS SSD (IO1)
+Designed for I/O intensive applications such as large relational or NoSQL database
+Use if you need more than 10,000 IOPS
+Can provision up to 20,000 IOPS per second
+3.) Throughput Optimized HDD (ST1)
+Big data
+Data warehousing
+Log processing
+Cannot be boot volume
+4.) Cold HDD (SC1)
+Lowest Cost Storage for infrequent accessed workloads
+File server
+Cannot be boot volumes
+5.) Magnetic (Standard)
+Lowest cost per gigabyte of all EBS volume types that is bootable. Magnetic volumes are ideal for workload where data is accessible infrequently and applications where the lowest storage cost is important.
+
+Exam Tips
+1.) SSD, General Purpose - GP2 - (Up to 10,000 IOPS)
+2.) SSD, Provisioned IOPS - IO1 - (More than 10,000 IOPS)
+3.) HDD, Throughput Optimized - ST1 - frequently accessed workloads
+4.) HDD, Cold - SC1 - less frequently accessed data
+5.) HDD, Magnetic - Standard - cheap, infrequent accessed storage
+
+You cannot mount 1 EBS volume to multiple EC2 instances, instead use EFS.
+
+EC2 Instance Types
+<see images>
+
+Connect to EC2 instance using SSH
+$ chmod 400 MyEC2KeyPair.pem
+$ ssh ec2-user@54.153.86.56 -i MyEC2KeyPair.pem
+
+Exam Tips
+1.) Termination Protection is turned off by default, you must turn it on.
+2.) On an EBS-backend instance, the default action is for the root EBS volume to be deleted when the instance is terminated.
+3.) EBS Root Volumes of your DEFAULT AMI's cannot be encrypted. You can also use a third party tool (such as bit locker) to encrypt the root volume, or this can be done when creating AMI
+4.) Additional volumes can be encrypted.
+
+Security Groups
+1.) All inbound traffic is blocked by default
+2.) All outbound traffic is allowed
+3.) Changes to Security Groups take place immediately
+4.) You can have any number of EC2 instances within a security group
+5.) You can have multiple security groups attached to EC2 instances
+6.) Security Groups are STATEFUL
+7.) If you create an inbound rule allowing traffic in, that traffic is automatically allowed back out again.
+8.) Can specify allow rules but not deny rules
+
+Security Groups Vs Network Access Control Lists (NACL)
+Security Groups are STATEFUL
+Cannot block certain IP addresses using Security Groups
+Network Access Control Lists are STATELESS
+Can block certain IP addresses using Network Access Control Lists
+
+Volumes
+1.) Volumes exist on EBS
+2.) Virtual Hard Disk
+
+Snapshots
+1.) Snapshots exist on S3
+2.) Snapshots are point in time copies of Volumes
+3.) Snapshots are incremental, this means that only the blocks that have changed since last snapshot are moved to S3.
+
+$ ssh ec2-user@54.219.167.6 -i MyEC2KeyPair.pem
+$ sudo su
+$ yum update
+$ yum install http
+$ chkconfig httpd on
+$ cd /var/www/html/
+$ touch index.html
+$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0    8G  0 disk
+└─xvda1 202:1    0    8G  0 part /
+xvdf    202:80   0  500G  0 disk
+$ cd /
+$ mkdir MyFileServer
+$ file -s /dev/xvdf
+/dev/xvdf: data
+$ mkfs -t ext4 /dev/xvdf
+$ mount /dev/xvdf /MyFileServer/
+$ cd /MyFileServer/
+$ ls
+lost+found
+$ touch index.html
+$ echo "hello" > hello.txt
+$ ls
+hello.txt  index.html  lost+found
+$ lsblk
+NAME    MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0    8G  0 disk
+└─xvda1 202:1    0    8G  0 part /
+xvdf    202:80   0  500G  0 disk /MyFileServer
+$ umount /dev/xvdf
+$ lsblk
+NAME    MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+xvda    202:0    0   8G  0 disk
+└─xvda1 202:1    0   8G  0 part /
+xvdf    202:80   0  500G  0 disk
+
+RAID
+Redundant Array Of Independent Disks
+Types of RAIDS
+1.) RAID 0
+Striped, No Redundancy, Good Performance
+2.) RAID 1
+Mirrored, Redundancy
+3.) RAID 5
+Good for reads, bad for writes
+AWS does not recommend putting RAID 5 on EBS
+4.) RAID 10
+Striped and Mirrored, Good Redundancy, Good Performance
+
+How can I take a Snapshot of a RAID array?
+Problem -
+Take a snapshot, the snapshot excludes data held in the cache by applications and the OS. This tends not to matter on a single volume, however using multiple volumes in a RAID array, this can be a problem due to interdependency of the array.
+Solution -
+Take an application consistent snapshot.
+-----
+Stop the application from writing to disk.
+Flush all caches to the disk.
+-----
+How can we do this?
+Method 1
+Freeze the system
+Method 2
+Unmount the RAID Array
+Method 3
+Shutting down the associated EC2 instance
+
+Amazon Machine Images (AMI)
+An Amazon Machine Images provides the information required to launch a virtual server in the cloud. You specify an AMI when you launch an instance and you can launch as many instances from the AMI as you need. You can also launch instances from as many different AMIs as you need.
+1.) A template for the root volume for the instance (for example an OS, an application server and applications)
+2.) Launch permissions that control which AWS accounts can use the AMI to launch instances.
+3.) A block device mapping that specifies the volume to attach to the instance when its launched.
+
+Exam Tip
+AMI's are regional. You can launch an AMI from the region in which it is stored. However you can copy AMI's to other regions using the console, command line or the Amazon EC2 API.
+
+Select AMI based on
+1.) Region
+2.) OS
+3.) Architecture - 32 and 64 bit
+4.) Launch Permissions
+5.) Storage for root devices (Root device volume)
+5.1) Instance Store (EPHEMERAL STORAGE) - less durable
+5.2) EBS Backed Volumes
+
+Types of AMI
+EBS Vs Instance Store
+All AMIs are categorized as either backed by Amazon EBS or backed by instance store.
+For EBS Volumes
+The root device for an instance launched from the AMI is an Amazon EBS volume created from an Amazon EBS snapshot.
+EBS can be stopped
+For Instance Store Volumes
+The root device for an instance launched from the AMI is an instance store volume created from a template stored in Amazon S3.
+Instance Store can't be stopped
+
+Chronology
+Instance Store
+EBS
+
+Exam Tips
+1.) Instance Store Volumes are sometimes called Ephemeral Storage.
+2.) Instance Store Volumes cannot be stopped. If the underlying host fails, you will lose the data.
+3.) EBS backed instance can be stopped. You will lose the data on this instance if it is stopped.
+4.) You can reboot both, you will not lose your data.
+5.) By default, both ROOT volumes will be deleted on termination, however with EBS volumes, you can tell AWS to keep the root device volume.
+
+1 subnet = 1 Availability Zone
+
+Elastic Load Balancers
+1.) Instances monitored by ELB are reported as
+InService or OutOfService
+2.) Health Checks check the instance health by talking to it
+3.) Have their own DNS name. You are never given an IP address
+
+Classic Load Balancer -> layer 4
+Application Load Balancer -> layer 7
+
+CloudWatch
+1.) Dashboards
+Create awesome dashboards to see what happened with your AWS environment.
+2.) Alarms
+Allows you to set Alarms that notify you when particular thresholds are hit.
+3.) Events
+CloudWatch Events help you respond to state change in your AWS environment.
+4.) Logs
+CloudWatch Logs helps you to aggregate, monitor and store logs.
+
+CloudWatch Vs CloudTrail
+CloudWatch -> Performance Monitoring
+CloudTrail -> Auditing
+
+Exam Tip
+Standard Monitoring = 5 mins
+Detailed Monitoring = 1 mins
+What are the default Metrics available for EC2 instance?
+1.) CPU related
+2.) Disk related
+3.) Network related
+4.) Status Check
+
+AWS Command Line Interface
+[root@ip-172-31-2-209 ec2-user]# aws configure
+AWS Access Key ID [None]: <AWS-Access-ID>
+AWS Secret Access Key [None]: <AWS-Secret>
+Default region name [None]: us-west-1
+Default output format [None]:
+[root@ip-172-31-2-209 ec2-user]# aws s3 ls
+[root@ip-172-31-2-209 ec2-user]# aws s3 help
+[root@ip-172-31-2-209 ec2-user]# cd ~
+[root@ip-172-31-2-209 ~]# ls -lah
+total 40K
+dr-xr-x---  4 root root 4.0K Feb  9 17:52 .
+dr-xr-xr-x 25 root root 4.0K Feb  9 17:49 ..
+drwxr-xr-x  2 root root 4.0K Feb  9 17:52 .aws
+-rw-------  1 root root  248 Feb  8 23:19 .bash_history
+-rw-r--r--  1 root root   18 Jan 15  2011 .bash_logout
+-rw-r--r--  1 root root  176 Jan 15  2011 .bash_profile
+-rw-r--r--  1 root root  176 Jan 15  2011 .bashrc
+-rw-r--r--  1 root root  100 Jan 15  2011 .cshrc
+drwx------  2 root root 4.0K Feb  8 21:49 .ssh
+-rw-r--r--  1 root root  129 Jan 15  2011 .tcshrc
+[root@ip-172-31-2-209 ~]# cd .aws/
+[root@ip-172-31-2-209 .aws]# ls -lah
+total 16K
+drwxr-xr-x 2 root root 4.0K Feb  9 17:52 .
+dr-xr-x--- 4 root root 4.0K Feb  9 17:52 ..
+-rw------- 1 root root   29 Feb  9 17:52 config
+-rw------- 1 root root  116 Feb  9 17:52 credentials
+[root@ip-172-31-2-209 .aws]# cat credentials
+[default]
+aws_access_key_id = <AWS-Access-ID>
+aws_secret_access_key = <AWS-Secret>
+[root@ip-172-31-2-209 .aws]# cat config
+[default]
+region = us-west-1
+[root@ip-172-31-2-209 .aws]# aws ec2 describe-instances
+{
+    "Reservations": [
+        {
+            "OwnerId": "860977078746",
+            "ReservationId": "r-07b1fe0309be2e36d",
+            "Groups": [],
+            "Instances": [
+                {
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "PublicDnsName": "ec2-54-193-56-81.us-west-1.compute.amazonaws.com",
+                    "State": {
+                        "Code": 16,
+                        "Name": "running"
+                    },
+                    "EbsOptimized": false,
+                    "LaunchTime": "2017-02-09T17:48:50.000Z",
+                    "PublicIpAddress": "54.193.56.81",
+                    "PrivateIpAddress": "172.31.2.209",
+                    "ProductCodes": [],
+                    "VpcId": "vpc-2572ba41",
+                    "StateTransitionReason": "",
+                    "InstanceId": "i-0713d9a24d663b839",
+                    "EnaSupport": true,
+                    "ImageId": "ami-165a0876",
+                    "PrivateDnsName": "ip-172-31-2-209.us-west-1.compute.internal",
+                    "KeyName": "MyEC2KeyPair",
+                    "SecurityGroups": [
+                        {
+                            "GroupName": "MyWebDMZ",
+                            "GroupId": "sg-065ee961"
+                        }
+                    ],
+                    "ClientToken": "IcmnX1486590564223",
+                    "SubnetId": "subnet-2b4be073",
+                    "InstanceType": "t2.micro",
+                    "NetworkInterfaces": [
+                        {
+                            "Status": "in-use",
+                            "MacAddress": "06:28:4d:e4:d6:26",
+                            "SourceDestCheck": true,
+                            "VpcId": "vpc-2572ba41",
+                            "Description": "",
+                            "Association": {
+                                "PublicIp": "54.193.56.81",
+                                "PublicDnsName": "ec2-54-193-56-81.us-west-1.compute.amazonaws.com",
+                                "IpOwnerId": "amazon"
+                            },
+                            "NetworkInterfaceId": "eni-f4cfd2fa",
+                            "PrivateIpAddresses": [
+                                {
+                                    "PrivateDnsName": "ip-172-31-2-209.us-west-1.compute.internal",
+                                    "Association": {
+                                        "PublicIp": "54.193.56.81",
+                                        "PublicDnsName": "ec2-54-193-56-81.us-west-1.compute.amazonaws.com",
+                                        "IpOwnerId": "amazon"
+                                    },
+                                    "Primary": true,
+                                    "PrivateIpAddress": "172.31.2.209"
+                                }
+                            ],
+                            "PrivateDnsName": "ip-172-31-2-209.us-west-1.compute.internal",
+                            "Attachment": {
+                                "Status": "attached",
+                                "DeviceIndex": 0,
+                                "DeleteOnTermination": true,
+                                "AttachmentId": "eni-attach-ecc7618d",
+                                "AttachTime": "2017-02-08T21:49:24.000Z"
+                            },
+                            "Groups": [
+                                {
+                                    "GroupName": "MyWebDMZ",
+                                    "GroupId": "sg-065ee961"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "SubnetId": "subnet-2b4be073",
+                            "OwnerId": "860977078746",
+                            "PrivateIpAddress": "172.31.2.209"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Placement": {
+                        "Tenancy": "default",
+                        "GroupName": "",
+                        "AvailabilityZone": "us-west-1a"
+                    },
+                    "Hypervisor": "xen",
+                    "BlockDeviceMappings": [
+                        {
+                            "DeviceName": "/dev/xvda",
+                            "Ebs": {
+                                "Status": "attached",
+                                "DeleteOnTermination": true,
+                                "VolumeId": "vol-022f4c7f3f1c05dfe",
+                                "AttachTime": "2017-02-08T21:49:25.000Z"
+                            }
+                        }
+                    ],
+                    "Architecture": "x86_64",
+                    "RootDeviceType": "ebs",
+                    "RootDeviceName": "/dev/xvda",
+                    "VirtualizationType": "hvm",
+                    "Tags": [
+                        {
+                            "Value": "MyWS",
+                            "Key": "Name"
+                        }
+                    ],
+                    "AmiLaunchIndex": 0
+                }
+            ]
+        },
+        {
+            "OwnerId": "860977078746",
+            "ReservationId": "r-02e01df2c8824c24e",
+            "Groups": [],
+            "Instances": [
+                {
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "PublicDnsName": "",
+                    "RootDeviceType": "ebs",
+                    "State": {
+                        "Code": 80,
+                        "Name": "stopped"
+                    },
+                    "EbsOptimized": false,
+                    "LaunchTime": "2017-02-08T17:25:56.000Z",
+                    "PrivateIpAddress": "172.31.9.250",
+                    "ProductCodes": [],
+                    "VpcId": "vpc-2572ba41",
+                    "StateTransitionReason": "User initiated (2017-02-08 19:38:11 GMT)",
+                    "InstanceId": "i-03ad551f580aad440",
+                    "EnaSupport": true,
+                    "ImageId": "ami-165a0876",
+                    "PrivateDnsName": "ip-172-31-9-250.us-west-1.compute.internal",
+                    "KeyName": "MyEC2KeyPair",
+                    "SecurityGroups": [
+                        {
+                            "GroupName": "default",
+                            "GroupId": "sg-eb51e68c"
+                        },
+                        {
+                            "GroupName": "MyWebDMZ",
+                            "GroupId": "sg-065ee961"
+                        }
+                    ],
+                    "ClientToken": "kDrxn1486574755685",
+                    "SubnetId": "subnet-2b4be073",
+                    "InstanceType": "t2.micro",
+                    "NetworkInterfaces": [
+                        {
+                            "Status": "in-use",
+                            "MacAddress": "06:ef:e9:43:9e:12",
+                            "SourceDestCheck": true,
+                            "VpcId": "vpc-2572ba41",
+                            "Description": "",
+                            "NetworkInterfaceId": "eni-705c417e",
+                            "PrivateIpAddresses": [
+                                {
+                                    "PrivateDnsName": "ip-172-31-9-250.us-west-1.compute.internal",
+                                    "Primary": true,
+                                    "PrivateIpAddress": "172.31.9.250"
+                                }
+                            ],
+                            "PrivateDnsName": "ip-172-31-9-250.us-west-1.compute.internal",
+                            "Attachment": {
+                                "Status": "attached",
+                                "DeviceIndex": 0,
+                                "DeleteOnTermination": true,
+                                "AttachmentId": "eni-attach-3179de50",
+                                "AttachTime": "2017-02-08T17:25:56.000Z"
+                            },
+                            "Groups": [
+                                {
+                                    "GroupName": "default",
+                                    "GroupId": "sg-eb51e68c"
+                                },
+                                {
+                                    "GroupName": "MyWebDMZ",
+                                    "GroupId": "sg-065ee961"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "SubnetId": "subnet-2b4be073",
+                            "OwnerId": "860977078746",
+                            "PrivateIpAddress": "172.31.9.250"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Placement": {
+                        "Tenancy": "default",
+                        "GroupName": "",
+                        "AvailabilityZone": "us-west-1a"
+                    },
+                    "Hypervisor": "xen",
+                    "BlockDeviceMappings": [],
+                    "Architecture": "x86_64",
+                    "StateReason": {
+                        "Message": "Client.UserInitiatedShutdown: User initiated shutdown",
+                        "Code": "Client.UserInitiatedShutdown"
+                    },
+                    "RootDeviceName": "/dev/xvda",
+                    "VirtualizationType": "hvm",
+                    "Tags": [
+                        {
+                            "Value": "MyWebServer",
+                            "Key": "Name"
+                        },
+                        {
+                            "Value": "Developers",
+                            "Key": "Departments"
+                        },
+                        {
+                            "Value": "456789",
+                            "Key": "EmpID"
+                        },
+                        {
+                            "Value": "R&D",
+                            "Key": "Team"
+                        }
+                    ],
+                    "AmiLaunchIndex": 0
+                }
+            ]
+        },
+        {
+            "OwnerId": "860977078746",
+            "ReservationId": "r-0ef67c220e018a50c",
+            "Groups": [],
+            "Instances": [
+                {
+                    "Monitoring": {
+                        "State": "disabled"
+                    },
+                    "PublicDnsName": "",
+                    "RootDeviceType": "ebs",
+                    "State": {
+                        "Code": 80,
+                        "Name": "stopped"
+                    },
+                    "EbsOptimized": false,
+                    "LaunchTime": "2017-02-08T21:23:41.000Z",
+                    "PrivateIpAddress": "172.31.11.172",
+                    "ProductCodes": [],
+                    "VpcId": "vpc-2572ba41",
+                    "StateTransitionReason": "User initiated (2017-02-08 21:45:04 GMT)",
+                    "InstanceId": "i-049d54e87b06edea9",
+                    "EnaSupport": true,
+                    "ImageId": "ami-165a0876",
+                    "PrivateDnsName": "ip-172-31-11-172.us-west-1.compute.internal",
+                    "KeyName": "MyEC2KeyPair",
+                    "SecurityGroups": [
+                        {
+                            "GroupName": "MyWebDMZ",
+                            "GroupId": "sg-065ee961"
+                        }
+                    ],
+                    "ClientToken": "tvTbp1486589020780",
+                    "SubnetId": "subnet-2b4be073",
+                    "InstanceType": "t2.micro",
+                    "NetworkInterfaces": [
+                        {
+                            "Status": "in-use",
+                            "MacAddress": "06:4b:36:8a:dc:ba",
+                            "SourceDestCheck": true,
+                            "VpcId": "vpc-2572ba41",
+                            "Description": "",
+                            "NetworkInterfaceId": "eni-d8dec3d6",
+                            "PrivateIpAddresses": [
+                                {
+                                    "PrivateDnsName": "ip-172-31-11-172.us-west-1.compute.internal",
+                                    "Primary": true,
+                                    "PrivateIpAddress": "172.31.11.172"
+                                }
+                            ],
+                            "PrivateDnsName": "ip-172-31-11-172.us-west-1.compute.internal",
+                            "Attachment": {
+                                "Status": "attached",
+                                "DeviceIndex": 0,
+                                "DeleteOnTermination": true,
+                                "AttachmentId": "eni-attach-95f355f4",
+                                "AttachTime": "2017-02-08T21:23:41.000Z"
+                            },
+                            "Groups": [
+                                {
+                                    "GroupName": "MyWebDMZ",
+                                    "GroupId": "sg-065ee961"
+                                }
+                            ],
+                            "Ipv6Addresses": [],
+                            "SubnetId": "subnet-2b4be073",
+                            "OwnerId": "860977078746",
+                            "PrivateIpAddress": "172.31.11.172"
+                        }
+                    ],
+                    "SourceDestCheck": true,
+                    "Placement": {
+                        "Tenancy": "default",
+                        "GroupName": "",
+                        "AvailabilityZone": "us-west-1a"
+                    },
+                    "Hypervisor": "xen",
+                    "BlockDeviceMappings": [],
+                    "Architecture": "x86_64",
+                    "StateReason": {
+                        "Message": "Client.UserInitiatedShutdown: User initiated shutdown",
+                        "Code": "Client.UserInitiatedShutdown"
+                    },
+                    "RootDeviceName": "/dev/xvda",
+                    "VirtualizationType": "hvm",
+                    "Tags": [
+                        {
+                            "Value": "EBS",
+                            "Key": "Name"
+                        }
+                    ],
+                    "AmiLaunchIndex": 0
+                }
+            ]
+        }
+    ]
+}
+[root@ip-172-31-2-209 .aws]# aws ec2 terminate-instances --instance-id i-0713d9a24d663b839
+{
+    "TerminatingInstances": [
+        {
+            "InstanceId": "i-0713d9a24d663b839",
+            "CurrentState": {
+                "Code": 32,
+                "Name": "shutting-down"
+            },
+            "PreviousState": {
+                "Code": 16,
+                "Name": "running"
+            }
+        }
+    ]
+}
+[root@ip-172-31-2-209 .aws]#
+Broadcast message from root@ip-172-31-2-209
+	(unknown) at 18:05 ...
+
+The system is going down for power off NOW!
+Connection to 54.193.56.81 closed by remote host.
+Connection to 54.193.56.81 closed.
+
+Identity Access Management Roles
+1.) Roles are more secure than storing your access keys and secret access keys on individual EC2 instances.
+2.) Roles are easier to manage
+3.) Roles can only be assigned when EC2 instance is being provisioned.
+4.) Roles are universal, you can use them in any region.
+
+Exam Tip
+Ones a role is applied to an EC2 instance that role is stuck there with the life of the instance unless the role is deleted. The role can be modified by adding different policies to it.
+
+Bash Scripting
+#!/bin/bash
+yum update -y
+yum install httpd -y
+service httpd start
+chkconfig httpd on
+aws s3 cp s3://websitebucket-kanishka/index.html /var/www/html/
+
+EC2 Instance Metadata
+[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/
+ami-id
+ami-launch-index
+ami-manifest-path
+block-device-mapping/
+hostname
+iam/
+instance-action
+instance-id
+instance-type
+local-hostname
+local-ipv4
+mac
+metrics/
+network/
+placement/
+profile
+public-hostname
+public-ipv4
+public-keys/
+reservation-id
+security-groups
+services/
+[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/public-ipv4
+54.154.228.60
+[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/public-ipv4 > mypublicip.html
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    13  100    13    0     0   4841      0 --:--:-- --:--:-- --:--:--  6500
+[root@ip-172-31-42-229 ec2-user]# cat mypublicip.html
+54.154.228.60[root@ip-172-31-42-229 ec2-user]#
+[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/iam/
+info
+security-credentials/[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/iam/info
+{
+  "Code" : "Success",
+  "LastUpdated" : "2017-02-09T22:56:13Z",
+  "InstanceProfileArn" : "arn:aws:iam::860977078746:instance-profile/MyS3AdminAccess",
+  "InstanceProfileId" : "AIPAJX253N2XZ6X6EMAEQ"
+}
+[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/hostname
+ip-172-31-42-229.eu-west-1.compute.internal
+[root@ip-172-31-42-229 ec2-user]# curl http://169.254.169.254/latest/meta-data/mac
+0a:bf:6f:79:d0:81
+[root@ip-172-31-42-229 ec2-user]#
+
+Launch Configuration and AutoScaling Groups
+#!/bin/bash
+yum install httpd -y
+yum update -y
+aws s3 cp s3://YOURBUCKETNAMEHERE/index.html /var/www/html/ --recursive
+service httpd start
+chkconfig httpd on
+
+EC2 Placement Groups
+A placement group is a logical grouping of instances within a single Availability Zone.
+Using placement groups enabled application to participate in low latency 10 Gbps network. Placement group are recommended for applications that benefit from low network latency, high network throughput or both.
+1.) A placement group can't span multiple Availability Zones.
+2.) The name you specify for a placement group must be unique within your AWS account.
+3.) Only certain type of instances can be launched in placement groups. (Computer Optimized, Memory Optimized, Storage Optimized)
+4.) AWS recommend homogeneous instances within placement groups.
+5.) You can't merge placement groups
+6.) You can't move an existing instance into a placement group. You can create an AMI from an existing instance, and then launch a new instance from the AMI into a placement group.
+
+EFS
+Elastic File System
+Amazon EFS is a file storage service for Amazon EC2 instance.
+Amazon EFS is easy to use and provide a simple interface that allows you to create and configure file systems quickly and easily.
+With Amazon EFS, storage capacity is elastic, growing and shrinking automatically as you add and remove files, so your applications have the storage they need, when they need it.
+
+EFS Features
+1.) Block based storage
+2.) Supports NFSv4 protocol (Network File Storage)
+3.) Can scale up to the petabytes
+4.) Can support thousands of concurrent NFS connections
+5.) Data is stored across multiple AZ's within a region
+6.) Read After Write Consistency
+
+Lambda
+It encapsulates
+1.) Data Centers
+2.) Hardware
+3.) Assembly Code/Protocols
+4.) High Level Languages
+5.) Operating Systems
+6.) Application Layer/AWS APIs
+7.) AWS Lambda
+AWS Lambda is a computer service where you can upload your code and create a Lambda function. AWS Lambda takes care of provisioning and managing the servers that you use to run the code. You don't have to worry about operating systems, patching, scaling etc.
+You can use Lambda in the following ways.
+1.) An an event driven compute service where AWS Lambda runs your code in response to events. These events could be changes to data in an Amazon S3 bucket or an Amazon DynamoDB table.
+2.) As a compute service to run your code in response to HTTP request using Amazon API Gateway or API calls made using AWS SDKs.
+
+Supported Languages by Lambda
+1.) Node.js
+2.) Java
+3.) Python
+4.) C#
+
+Why is Lambda Cool?
+1.) No Servers
+2.) Continuous Scaling
+3.) Super Cheap
+
+
+
+https://aws.amazon.com/ec2/faqs/
+https://aws.amazon.com/elasticloadbalancing/classicloadbalancer/faqs/

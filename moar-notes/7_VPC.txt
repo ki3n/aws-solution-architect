@@ -1,0 +1,71 @@
+VPC
+Virtual Private Cloud
+
+What is VPC?
+It lets you provision a logically isolated section of the AWS cloud where you can launch AWS resources in the virtual network that you define.
+You have complete control over your virtual networking environment, including sections of your IP address range, creation of subnets and configuring of route tables and network gateways.
+
+You can easily customize the network configuration for your Amazon VPC. 
+Eg- You can create public-facing subnets for your webservers that has access to the internet, and place your backend systems such as databases or application servers in a private-facing subnet with no internet access. You can leverage multiple layers of security, including security groups and network access control lists, to help control access to Amazon EC2 instances in each subnet.
+
+Additionally you can create a Hardware Virtual Private Network (VPN) connection between your corporate datacenter and your VPC and leverage the AWS cloud as an extension of your corporate datacenter.
+
+What can you do with a VPC?
+Launch instances into a subnet of your choosing
+Assign custom IP address range in each subnet
+Configure route tables between subnets
+Create internet gateways and attach it to our VPC
+Much better security control over your AWS resources
+Instance security groups
+Subnet network access control lists(ACLS)
+
+Default VPC vs Custom VPC
+Default VPC is user-friendly, allowing you to immediately deploy instances
+All subnets in default VPC have a route out to the internet
+Each EC2 instance has both a public and private IP address
+If you delete the default VPC the only way to get it back is to contact AWS
+
+VPC Peering
+This allows you to connect one VPC with another via a direct network route using private IP address.
+Instance behaves as if they are on the same private network
+You can peer VPC' s with other AWS accounts as well as with other VPCs in the same account.
+Peering is in start configuration i.e. 1 central VPC can peer with 4 others. 
+NO TRANSITIVE PEERING
+
+Exam Tip
+Think of VPC as a logical datacenter in AWS
+Consists of IGW's (or Virtual Private Gateways), Route Tables, Network Access Control Lists, Subnets, Security Groups
+1 Subnet = 1 AZ (Availability Zone)
+Security Groups are Stateful (both inbound and outbound traffic is allowed)
+Network Access Control Lists are Stateless
+NO TRANSITIVE PEERING
+
+Reserved IP address
+10.0.0.0: Network address 
+10.0.0.1: Reserved by AWS for the VPC router
+10.0.0.2: Reserved by AWS
+10.0.0.3: Reserved by AWS for future use
+10.0.0.255: Network broadcast address
+
+========================================================================================================================================
+
+Exam Tips for NAT Instances
+1.) When creating NAT instances, Disable source/destination check on the instance
+2.) NAT instances must be in a public subnet
+3.) There must be a route out of the private subnet to the NAT instance, in order for this to work.
+4.) The amount of traffic that NAT instances supports, depends on the instance size. If you are bottlenecking, increase the instance size
+5.) You can create high availability using Autoscaling Groups, multiple subnets in different AZ's and a script to automate failover.
+6.) Always behind a security group
+
+Exam Tips for NAT Gateways
+1.) Preferred by the enterprise
+2.) Scale automatically up to 10Gbps
+3.) No need to patch
+4.) Not associated with security groups
+5.) Automatically assigned a public IP address
+6.) Remember to update your route tables.
+7.) No need to disable Source/Destination Checks
+
+========================================================================================================================================
+
+ACL

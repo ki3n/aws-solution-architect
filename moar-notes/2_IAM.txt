@@ -1,0 +1,39 @@
+IAM
+Identity Access Management
+It allows you to manage users and their levels of access to the AWS Console.
+
+What does IAM give you?
+1.) Centralized control to your AWS account
+2.) Shared access to your AWS account
+3.) Granular Permissions
+4.) Identity Federation (including Active Directory, Facebook, Linkedin etc)
+5.) Multifactor Authentication
+6.) Provide temporary access for users/devices and services where necessary
+7.) Allow you to set up your own password rotation policy
+8.) Integrates with many different AWS services
+9.) Supports PCI DSS Compliance
+
+Critical Terms
+1.) Users - End users
+2.) Groups - Collection of users under one set of permissions
+3.) Roles - You create roles and can then assign them to AWS resources
+4.) Policies -
+A document that defines one (or more permissions)
+JSON format
+
+IAM is universal.
+It does not apply to regions.
+
+Root Account
+It is the account created when you first setup your AWS account.
+It has complete Admin access.
+
+New Users
+New users have NO permission when created.
+New users are assigned Access Key ID and Secret Access keys when first created.
+These can't be used to login to the console
+These are used to access AWS via the APIs and Command Line
+These credentials can be viewed only ones when they are created. If lost then they have to be regenerated.
+
+Always setup Multifactor Authentication on the root account
+You can create and customize your own password rotation policy

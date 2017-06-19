@@ -1,0 +1,358 @@
+Database
+
+Relational Database
+Database
+Tables
+Rows 
+Columns
+
+Relational Database Types
+1.) SQL Server
+2.) Oracle
+3.) MySQL
+4.) PostgreSQL
+5.) Aurora
+6.) MariaDB
+
+Non-Relational Databases
+Document Oriented 
+1.) Database
+    1.1) Collection -------------> Table
+    1.2) Document ---------------> Row
+    1.3) Key Value Pairs --------> Columns
+    
+JSON/NoSQL
+{
+"_id": "gafdh87678sdvd6v7dsfv76d"
+"firstname": "John",
+"surname": "Smith",
+"Age": "23",
+"address": [
+    { "street": "21 Jump Street",
+    "suburbs": "Richmond", }
+           ]
+}
+
+Data Warehousing
+Used in Business Intelligence
+Tools - Cognos, Jaspersoft, SQL Server, Reporting Services, Oracle Hyperion, SAP NetWeaver
+Used to pull in very large and complex data sets
+Usually used by management to do queries on data (such as current performance vs targets)
+
+OLTP vs OLAP
+Online Transaction Processing (OLTP)
+Online Analytical Processing (OLAP)
+Differ in the type of queries that are run
+
+OLTP Example:
+Order number 3423223
+Pulls up a row of data such as Name, Date, address to deliver to, Delivery Status
+
+OLAP Example:
+Net profit for EMEA and Pacific for Digital Radio Product
+Pulls in large number of records
+Sum of radios sold in EMEA
+Sum of radios sold in Pacific
+Unit cost of radio in each region
+Sales price of each radio
+Sales price - unit cost
+Data warehousing databases use different types of architecture both from a database perspective and infrastructure layer
+
+ElastiCache
+It is a web service that makes it easy to deploy, operate and scale an in-memory cache in the cloud. The service improves the performance of the web application by allowing you to retrieve information from fast, managed in-memory caches, instead of relying entirely on slower disk-based databases. 
+It supports 2 open source in memory caching engines
+1.) Memcached -> https://memcached.org/
+2.) Redis -> https://redis.io/
+
+DMS
+Database Migration Services
+Allows you to migrate your production database to AWS
+AWS manages all the complexities of the migration process like data type transformation, compression and parallel transfer (for faster data transfer) while ensuring that data changes to the source database occurs during the migration process are automatically replicated to the target
+
+AWS Schema Conversion Tool
+It automatically converts the source database schema and a majority of the custom code, including views, stored procedures and functions to a format compatible with the target database.
+
+AWS Database Types
+1.) RDS - OLTP
+    1.1) SQL
+    1.2) MySQL
+    1.3) PostgreSQL
+    1.4) Oracle
+    1.5.) Aurora
+    1.6) MariaDB
+2.) DynamoDB - NoSQL
+3.) RedShift - OLAP
+4.) Elasticache - In Memory Caching
+    4.1) Memcached
+    4.2) Redis
+5.) DMS
+
+========================================================================================================================================
+
+2 separate security groups for
+1.) EC2 instance
+2.) RDS instance
+Then allow port 3306 from RDS instance through your Web Server security group
+
+========================================================================================================================================
+
+RDS - Back Ups, Multi-AZ, Read Replicas
+
+Automated Backups
+2 types of backups for AWS
+1.) Automated Backups
+2.) Deleted Snapshots
+
+Automated Backups
+They allow you to recover your database to any point in time within a "retention period". 
+Retention period -> 1 and 35 days
+It will take a full daily snapshot and will also store transaction logs throughout the day.
+When you do a recovery, AWS will first choose the most recent daily backup and then apply transaction logs relevant to that day.
+This allows you to do a point in time recovery down to a second, within the retention period.
+Automated Backups are enabled by default
+Backup data is stored in S3 and you get free storage space equal to the size of your database.
+If you have an RDS instance of 10 GB you will get 10 GB worth of storage.
+Backups are taken within a defined window. 
+During the backup window storage I/O may be suspended while your data is backed up and you may experience elevated latency.
+
+Deleted Snapshots
+They are done manually.
+They are stored even after you delete the original RDS instance, unlike automated backups.
+
+Restoring Backups
+When you restore either using Automated Backups or manual Snapshots, the restored versions of the database will be a new RDS instance with a new DNS end point
+
+Encryption
+Encryption at rest is supported by MySQL, Oracle, SQL Server, PostgreSQL, MariaDB
+It is also done using AWS Key Management Server(KMS) service.
+Once your RDS instance is encrypted the data stored at rest in the underlying storage is encrypted, as are its automated backups, read replicas and snapshots.
+Encrypting an existing DB instance is not supported
+To use Amazon RDS encryption for an existing database, create a new DB instance with encryption enabled and migrate your data into it.
+
+Scaling up RDS
+Take a snapshot
+Restore DB Instance with a new DB Instance Class
+
+Multi-AZ
+Multi-Availability Zone
+It allows you to have an exact copy of your production database in another Availability Zone.
+AWS handles the replication for you, so when your production database is written to, this write will automatically be synchronized to stand by database
+In the event of planned database maintenance, DB instance failure, or an Availability Zone failure, Amazon RDS will automatically failover to the standby so that database operations can resume quickly without administrative intervention.
+Multi-AZ is for disaster recovery only.
+It is not used for improving performance
+For performance improvements, you need Read Replicas.
+
+Multi-AZ supports the following DBs
+1.) SQL Server
+2.) Oracle
+3.) MySQL
+4.) PostgreSQL
+5.) MariaDB
+
+Read Replicas
+They allow you to have a read only copy of your production database.
+This is achieved by using Asynchronous replication from the primary RDS instance to the read replica.
+You need read replica's primarily for very heavy database workloads.
+
+Read Replicas supports the following DBs
+1.) MySQL
+2.) PostgreSQL
+3.) MariaDB
+
+Uses of Read Replicas
+1.) Used for scaling
+2.) Not used for DR
+3.) Must have automatic backup turned on in order to deploy a read replica
+4.) You can have up to 5 read replicas copies of any database.
+5.) You can have read replicas of read replicas (but watch out for latency)
+6.) Each read replica will have its own DNS end point
+7.) You cannot have read replicas that have Multi-AZ
+8.) You can create Read Replicas of Multi-AZ source database
+9.) Read replicas can be promoted to be their own databases. This breaks the replication.
+10.) Read Replica in a second region for MySQL and MarisDB. Not for PostgreSQL
+
+DynamoDB Vs RDS
+DynamoDB offers "push button" scaling, meaning that you can scale your database on the fly, without any downtime.
+RDS is not so easy and you usually have to use a bigger instance size or to add a read replica.
+
+========================================================================================================================================
+
+DynamoDB
+It is a fast and flexible NoSQL database service for all applications need consistent, single digit millisecond latency at any scale.
+It is a fully managed database and supports both document and key-value data models.
+Its flexible data model and reliable performance make it a great for mobile, web, gaming, ad-tech, IOT and many other applications.
+1.) Stored on SSD
+2.) Spread across 3 geographically distinct data centers
+3.) Eventual Consistent reads
+Consistency across all copies of data is usually reached within a second.
+Repeating the read after a short time should return the updated data.
+Best read performance
+4.) Strong Consistent reads
+It returns a result that reflects all writes that received a successful response prior to the read.
+
+
+DynamoDB Pricing
+Provisioned Throughput Capacity
+1.) Write Throughput $0.0065 per hour for every 10 units
+2.) Read Throughput $0.0065 per hour for every 50 units
+Storage costs of $0.25GB per month
+It is expensive for Writes but very cheap for Reads.
+
+========================================================================================================================================
+
+RedShift
+Amazon RedShift is a fast and powerful, fully managed, petabyte-scale data warehouse service in the cloud.
+Customers can start small for just $0.25 per hour with no commitments or upfront costs and scale to a petabyte or more for $1,000 per terabyte per year, less than tenth of most other data warehousing solutions.
+
+Online Analytical Processing (OLAP)
+OLAP Example:
+Net profit for EMEA and Pacific for Digital Radio Product
+Pulls in large number of records
+Sum of radios sold in EMEA
+Sum of radios sold in Pacific
+Unit cost of radio in each region
+Sales price of each radio
+Sales price - unit cost
+Data warehousing databases use different types of architecture both from a database perspective and infrastructure layer
+
+RedShift Configuration
+1.) Single Node (160 GB)
+2.) Multi Node
+Leader Node - manages client connections and receives queries
+Compute Node - store data and perform queries and computations. Up to 128 compute nodes.
+
+RedShift is 10 times faster
+1.) Columnar Data Storage
+Instead of storing data as a series of rows, Amazon Redshift organizes the data by columns
+Unlike row based systems, which are ideal for transaction processing, column based systems are ideal for data warehousing and analytics, where queries often involve aggregates performed over large data sets. 
+Since only the columns involved in the queries are processes and columnar data is stored sequentially on the stored media, column-based systems require far fewer I/Os, greater improving query performance.
+2.) Advanced Compression
+Columnar data stores can be compressed much more than row based data stores because similar data is stored sequentially on disk. 
+Amazon Redshift employs multiple compression techniques and can achieve significant compression relative to traditional relational data stores.
+Amazon Redshift doesn’t require indexes or materialized views and so uses less space than traditional relational database systems
+When loading data into an empty table, Amazon Redshift automatically samples your data and selects the most appropriate compression scheme.
+3.) MPP - Massive Parallel Processing
+Amazon Redshift automatically distributes data and query load across all nodes.
+Amazon Redshift makes it easy to add nodes to your data warehouse and enables you to maintain fast query performance as your data warehouse grows.
+
+Amazon Redshift Pricing
+1.) Compute Node Hours
+2.) Backup
+3.) Data transfer (only within a VPC, not outside it)
+
+Amazon Redshift Security
+1.) Encrypted in transit using SSL
+2.) Encrypted at rest using AES-256 encryption
+3.) By default, RedShift takes care of key management.
+3.1) Manage your own keys through HSM (Hardware Security Module)
+3.2) AWS Key Management Service
+
+Amazon Redshift Availability
+1.) Currently only available in 1 AZ
+2.) Can restore snapshots to new AZ's in the event of an outage.
+
+========================================================================================================================================
+
+Elasticache
+It is a web service that makes it easy to deploy, operate and scale an in-memory cache in the cloud
+The service improvers the performance of web applications by allowing you to retrieve information from fast, managed, in-memory caches, instead of relying entirely on slower disk-based databases.
+
+Amazon Elasticache can be used to significantly improve latency and throughput for many read-heavy application workload (such as social networking, gaming, media sharing and Q&A portals) or compute intensive workloads (such as recommendations engine.)
+
+Caching improves application performance by storing critical pieces of data in memory for low-latency access. Cached information may include the results of I/O intensive database queries or the results of computationally intensive calculations. 
+
+Types of Elasticache
+1.) Memcached
+A widely-adopted memory object caching system.
+Elasticache is protocol compliant with Memcached
+Memcached doesn’t support Multi-AZ
+2.) Redis
+A popular open-source in-memory key-value store that supports data structures such as stored sets and lists.
+ElastiCache supports Master/Slave replication and Multi-AZ which can be used to achieve cross AZ redundancy.
+
+Exam Tips
+Scenario - A DB is under a lot of stress/load. You may be asked which service you should use to alleviate this.
+Solution
+Elasticache is a good choice if your database is particularly read heavy and not prone to frequent changing.
+Redshift is a good answer if the reason your database is feeling stress is because management keep running OLAP transactions.
+
+========================================================================================================================================
+
+Amazon Aurora
+
+Only runs on AWS Infra
+It is MySQL compatible, relational DB engine that combines the speed and availability of high end commercial DBs with the simplicity and cost effectiveness of open source databases.
+Amazon Aurora provides 5 times better performance than MySQL at a price point one tenth that of a commercial database while delivering similar performance and availability.
+
+Aurora Scaling
+Starts with 10GB, Scales in 10GB increments to 64TB (Storage Auto scaling)
+Compute resources can also scale up to 32vCPUs and 244GB of Memory
+2 copies of your data are contained in each availability zone, with minimum of 3 availability zones. 6 copies of your data.
+Aurora is designed to transparently handle the loss of up to two copies of data without affecting database write availability and up to 3 copies without affecting read availability.
+Aurora storage is also self-healing. Data blocks and disks are continuously scanned for errors and repaired automatically.
+
+Aurora Replicas
+2 Types of replicas are available
+Aurora Replicas (currently 15)
+MySQL Read Replicas (currently 5)
+
+========================================================================================================================================
+
+
+Database Summary
+
+1.) RDS - OLTP
+    1.) SQL
+    2.) MySQL
+    3.) PostgreSQL
+    4.) Oracle
+    5.) Aurora
+    6.) MariaDB
+2.) DynamoDB - NoSQL
+3.) Redshift - OLAP
+4.) Elasticache - In Memory Caching
+    1.) Memcached
+    2.) Redis
+    
+Multi-AZ
+
+Read Replica
+
+Aurora Scaling
+2 copies of your data are contained in each availability zone, with minimum of 3 availability zones. 6 copies of your data.
+Aurora is designed to transparently handle the loss of up to two copies of data without affecting database write availability and up to 3 copies without affecting read availability.
+Aurora storage is also self-healing. Data blocks and disks are continuously scanned for errors and repaired automatically.
+
+Aurora Replicas
+2 Types of replicas are available
+Aurora Replicas (currently 15)
+MySQL Read Replicas (currently 5)
+
+DynamoDB Vs RDS
+DynamoDB offers "push button" scaling, meaning that you can scale your database on the fly, without any downtime.
+RDS is not so easy and you usually have to use a bigger instance size or to add a read replica.
+
+DynamoDB
+1.) Stored on SSD
+2.) Spread across 3 geographically distinct data centers
+3.) Eventual Consistent reads
+Consistency across all copies of data is usually reached within a second.
+Repeating the read after a short time should return the updated data.
+Best read performance
+4.) Strong Consistent reads
+It returns a result that reflects all writes that received a successful response prior to the read.
+
+RedShift Configuration
+1.) Single Node (160 GB)
+2.) Multi Node
+Leader Node - manages client connections and receives queries
+Compute Node - store data and perform queries and computations. Up to 128 compute nodes.
+
+Elasticache
+It is a web service that makes it easy to deploy, operate and scale an in-memory cache in the cloud
+The service improvers the performance of web applications by allowing you to retrieve information from fast, managed, in-memory caches, instead of relying entirely on slower disk-based databases.
+Supports 2 open source in memory caching engines
+1.) Memcached
+2.) Redis
+
+========================================================================================================================================

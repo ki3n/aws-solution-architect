@@ -1,0 +1,433 @@
++------------------------------+------------------------------------+
+|         AWS Platform         |                                    |
++------------------------------+------------------------------------+
+| AWS Global Infrastructure    |                                    |
+|                              | Region                             |
+|                              | Availability Zone (AZ)             |
+|                              | Edge Location                      |
+| Network and Content Delivery |                                    |
+|                              | VPC                                |
+|                              | Route53                            |
+|                              | CloudFront                         |
+|                              | Direct Connect                     |
+| Compute                      |                                    |
+|                              | EC2                                |
+|                              | EC2 Container Service              |
+|                              | Elastic Beanstalk                  |
+|                              | Lambda                             |
+|                              | Lightsail                          |
+| Storage                      |                                    |
+|                              | Simple Storage Service (S3)        |
+|                              | Glacier                            |
+|                              | Elastic File Service (EFS)         |
+|                              | Storage Gateway                    |
+| Databases                    |                                    |
+|                              | Relational Database Service (RDS)  |
+|                              | DynamoDB                           |
+|                              | Redshift                           |
+|                              | Elasticache                        |
+| Migration                    |                                    |
+|                              | Snowball                           |
+|                              | Database Migration Services (DMS)  |
+|                              | Server Migration Service (SMS)     |
+| Analytics                    |                                    |
+|                              | Athena                             |
+|                              | Elastic Map Reduce (EMR)           |
+|                              | Cloud Search                       |
+|                              | Elastic Search                     |
+|                              | Kinesis                            |
+|                              | Data Pipeline                      |
+|                              | Quick Sight                        |
+| Security and Identity        |                                    |
+|                              | Identity Access Management (IAM)   |
+|                              | Inspector                          |
+|                              | Certificate Manager                |
+|                              | Directory Service                  |
+|                              | Web Application Firewall (WAF)     |
+|                              | Artifacts                          |
+| Management Tools             |                                    |
+|                              | Cloud Watch                        |
+|                              | Cloud Formation                    |
+|                              | Cloud Trail                        |
+|                              | Opsworks                           |
+|                              | Config Manager                     |
+|                              | Trusted Advisor                    |
+| Application Services         |                                    |
+|                              | Step Functions                     |
+|                              | Simple Workflow Service (SWF)      |
+|                              | API Gateway                        |
+|                              | AppStream                          |
+|                              | Elastic Transcoder                 |
+| Developer Tools              |                                    |
+|                              | CodeCommit                         |
+|                              | CodeBuild                          |
+|                              | CodeDeploy                         |
+|                              | CodePipeline                       |
+| Mobile Services              |                                    |
+|                              | Mobile Hub                         |
+|                              | Cognito                            |
+|                              | Device Farm                        |
+|                              | Mobile Analytics                   |
+|                              | Pinpoint                           |
+| Business Productivity        |                                    |
+|                              | WorkDocs                           |
+|                              | WorkMail                           |
+| Internet Of Things           |                                    |
+|                              | iOT                                |
+| Desktop & App Streaming      |                                    |
+|                              | WorkSpaces                         |
+|                              | AppStream 2.0                      |
+| Artificial Intelligence      |                                    |
+|                              | Alexa                              |
+|                              | Polly                              |
+|                              | Machine Learning                   |
+|                              | Rekognition                        |
+| Messaging                    |                                    |
+|                              | Simple Notification Services (SNS) |
+|                              | Simple Queue Service (SQS)         |
+|                              | Simple Email Service (SES)         |
++------------------------------+------------------------------------+
+
+--------------------------------------------------------------------------------
+
+AWS Global Infrastructure
+
+Region
+It is a geographical area.
+
+Availability Zone (AZ)
+It is simply a data center
+
+Each region consists of 2 or more Availability Zones
+
+Edge Location
+They are CDN End Points for CloudFront
+
+--------------------------------------------------------------------------------
+
+Network and Content Delivery
+
+VPC
+Virtual Private Cloud
+Virtual data center
+
+Route53
+Amazons DNS service
+Derived from Route66
+U.S. Route 66 was one of the original highways within the U.S. Highway System
+
+CloudFront
+Part of the CDN
+Consists of edge locations that will cache assets
+
+Direct Connect
+Used to connect physical data centers to AWS directly using a dedicated telephone line
+
+--------------------------------------------------------------------------------
+
+Compute
+
+EC2
+Elastic Compute Cloud
+They are virtual machines in the cloud
+
+EC2 Container Service
+Highly scalable high performance container management service that support docker containers.
+It allows to run applications on a managed cluster of amazon EC2 instances.
+It eliminates the need to install, operate and scale your own cluster management infrastructure.
+
+Elastic Beanstalk
+Upload the code to elastic beanstalk and it will look at the code and it will provision all the underlying infrastructure underneath the code
+
+Lambda
+Serverless
+Upload the code and then the code will respond to events
+
+Lightsail
+Out of the box cloud
+If you want Wordpress/Joomla site Lightsail will deploy it for you automatically
+
+--------------------------------------------------------------------------------
+
+Storage
+
+S3
+Simple Storage Service
+Virtual disk in the cloud which stores objects (files - doc, ppt, pictures, movies, txt)
+Eg - Dropbox
+
+Glacier
+Used for data archival
+Can't access the date stored here immediately
+Takes 3-4 hours to retrieve them
+Place where S3 files are archived
+
+EFS
+Elastic File Service
+Block based storage
+Could install databases, applications
+We can share the volume with multiple virtual machines
+
+Storage Gateway
+Way of connecting S3 to your on premise data center or to your headquarters
+It is a VM that is installed in the premise and this communicates with S3
+
+--------------------------------------------------------------------------------
+
+Databases
+
+RDS
+Relational Database Service
+MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Amazon Aurora
+
+DynamoDB
+Non Relational Database
+No SQL DB
+Scalable
+High performance
+
+Redshift
+Data warehousing solution
+
+Elasticache
+Caches data in the cloud
+
+--------------------------------------------------------------------------------
+
+Migration
+
+Snowball
+Import/Export
+Send a bunch of disks to Amazon. They would transfer the data on the disks to S3.
+Briefcase size disk sent by Amazon. You load it with data and send it back to Amazon.
+
+DMS
+Database Migration Services
+Allows to migrate on premise database to the AWS cloud
+
+SMS
+Server Migration Service
+Allows to migrate on premise VMs to the AWS cloud
+
+--------------------------------------------------------------------------------
+
+Analytics
+
+Athena
+Allows to run SQL queries on S3
+
+EMR
+Elastic Map Reduce
+Used for big data processing
+Used for log analysis, web indexing, analyze financial markets
+Uses Hadoop, Apache Spark, Apache HBase, presto
+
+Cloud Search
+Managed service provided by AWS
+Allows to create search capabilities within your website/application
+
+Elastic Search
+Service that uses an open source framework
+Allows to create search capabilities within your website/application
+
+Kinesis
+Used to stream and analyze real time data on a massive scale
+Used to analyze financial transactions, market, sentiment analysis
+
+Data Pipeline
+Used to move data from one place to another
+Move data from S3 to DynamoDB or vice versa
+
+Quick Sight
+Business Analytics tool
+Create visualizations in dashboards
+
+--------------------------------------------------------------------------------
+
+Security and Identity
+
+IAM
+Identity Access Management
+Set up new user
+Used to sign in and authenticate
+Used to assign users permissions
+Used to group users
+
+Inspector
+It is an agent that you install on your VM.
+It inspects the VM and does security reporting as to what is going on
+
+Certificate Manager
+Gives free SSL certificates for your domain names
+
+Directory Service
+Way of connecting AD to AWS
+
+WAF
+Web Application Firewall
+Gives application level protection to your website
+
+Artifacts
+Get the documentation in the AWS console
+Get all compliance documents
+
+--------------------------------------------------------------------------------
+
+Management Tools
+
+Cloud Watch
+Used to monitor performance of the AWS environment
+Eg - RAM Utilization, Disk Utilization, CPU Utilization
+
+Cloud Formation
+Turns your infrastructure into code
+Documents/Describes your AWS environment
+Cloud Formation Templates
+
+Cloud Trail
+Way of auditing your AWS resources
+Used to audit changes made to your AWS environment
+
+Opsworks
+Used to automate deployment using Chef
+
+Config Manager
+Monitors the environment and gives warnings when it is about to break down
+Can be used to create alerts
+
+Trusted Advisor
+Used to provide tips/recommendations on performance optimization, security fixes, fault tolerant environment
+
+--------------------------------------------------------------------------------
+
+Application Services
+
+Step Functions
+Visualizes what is going on inside your application
+
+SWF
+Simple Workflow Service
+Coordinate human led task and automated tasks
+
+API Gateway
+Used to create, publish, maintain, monitor and secure API at scale
+It is a door for your apps to access backend data
+
+AppStream
+Way of streaming desktop applications to your users
+
+Elastic Transcoder
+Used to transcode video into various formats useful for various devices
+
+--------------------------------------------------------------------------------
+
+Developer Tools
+
+CodeCommit
+Github
+Way of storing code in the cloud
+Code can be open or private
+
+CodeBuild
+Way of compiling the code
+
+CodeDeploy
+Deploy code to the EC2 instance in a automated and regular fashion
+
+CodePipeline
+Way of keeping track of various versions of the code
+
+--------------------------------------------------------------------------------
+
+Mobile Services
+
+Mobile Hub
+Used to add, configure and design features for your mobile apps
+User authentication, data storage, backend logic, push notifications, content delivery and analytics
+Consist of its own console
+
+Cognito
+Users can sign up and sign into your apps such as social identity providers
+
+Device Farm
+This is used to improve the quality of Android, iOS, Fire OS apps by quickly and securely testing them on 100s of smartphones
+
+Mobile Analytics
+Simple and cost effective way of analyzing app usage data
+
+Pinpoint
+Enables to understand and engage with the application users
+It is like google analytics for your mobile application
+Google Analytics + Targeted marketing
+
+--------------------------------------------------------------------------------
+
+Business Productivity
+
+WorkDocs
+Way for storing important work documents in the cloud
+Uses S3
+
+WorkMail
+Like Exchange for AWS
+
+--------------------------------------------------------------------------------
+
+Internet Of Things
+
+iOT
+Having 1000s of devices and then keeping track of them using iOT gateway
+
+--------------------------------------------------------------------------------
+
+Desktop & App Streaming
+
+WorkSpaces
+VDI
+It is a way of having your desktop in the cloud
+
+AppStream 2.0
+Way of streaming desktop applications to your users
+
+--------------------------------------------------------------------------------
+
+Artificial Intelligence
+
+Alexa
+Amazons voice service in the cloud
+Communicate with alexa using echo
+lex drives alexa
+
+Polly
+Most advances text to speech service on the planet
+Uses Synthesis Speech Markup Language
+
+Machine Learning
+Give AWS a data set and tell it what the outcomes
+Amazon will use Machine Learning to analyze the data set and predict the outcome
+
+Rekognition
+Upload a picture to it and it will tell you what is in that picture.
+It will give you tags.
+It uses facial recognition.
+
+--------------------------------------------------------------------------------
+
+Messaging
+
+SNS
+Simple Notification Services
+Notifies the user via email, text message
+Publish using HTTP, HTTPS endpoints
+
+SQS
+Simple Queue Service
+Way of decoupling your applications
+It is a queue system.
+You can post jobs to a queue.
+
+SES
+Simple Email Service
+It is a way of sending or receiving emails using AWS
+
+--------------------------------------------------------------------------------
